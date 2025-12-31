@@ -17,7 +17,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t yangmw7/jenkins-web:latest .'
+                sh 'docker build --no-cache -t yangmw7/jenkins-web:latest .'
             }
         }
 
@@ -33,6 +33,7 @@ pipeline {
                 ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SERVICE_HOST} '
                     docker stop jenkins-web || true
                     docker rm jenkins-web || true
+                    docker pull yangmw7/jenkins-web:latest
                     docker run -d --name jenkins-web -p 8080:80 yangmw7/jenkins-web:latest
                 '
                 """
