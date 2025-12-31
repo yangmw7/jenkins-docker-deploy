@@ -26,10 +26,10 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                sh """
+                sh '''
                 docker login -u yangmw7 -p <DOCKER_HUB_TOKEN>
                 docker push ${IMAGE_NAME}:latest
-                """
+                '''
             }
         }
 
