@@ -3,27 +3,35 @@ pipeline {
 
     environment {
         SERVICE_HOST = "ubuntu@172.31.8.78"
-        SSH_KEY = "/var/lib/jenkins/.ssh/jenkins_deploy"
+        SSH_KEY      = "/var/lib/jenkins/.ssh/jenkins_deploy"
+        IMAGE_NAME   = "yangmw7/jenkins-web"
+        IMAGE_TAG    = "${BUILD_NUMBER}"
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 git credentialsId: 'github-creds',
-                    url: 'https://github.com/yangmw7/jenkins-docker-deploy.git',
-                    branch: 'main'
+                    url: 'https://github.com/yangmw7/jenkins-docker-deploy.git'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build --no-cache -t yangmw7/jenkins-web:latest .'
+                sh """
+                docker build --no-cache -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+                """
             }
         }
 
         stage('Docker Push') {
             steps {
-                sh 'docker push yangmw7/jenkins-web:latest'
+                sh """
+                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                docker push ${IMAGE_NAME}:latest
+                """
             }
         }
 
@@ -33,8 +41,8 @@ pipeline {
                 ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SERVICE_HOST} '
                     docker stop jenkins-web || true
                     docker rm jenkins-web || true
-                    docker pull yangmw7/jenkins-web:latest
-                    docker run -d --name jenkins-web -p 8080:80 yangmw7/jenkins-web:latest
+                    docker pull ${IMAGE_NAME}:latest
+                    docker run -d --name jenkins-web -p 80:80 ${IMAGE_NAME}:latest
                 '
                 """
             }
