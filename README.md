@@ -173,4 +173,43 @@ GitHub Push
 
 ---
 
-### 2026-01-02
+### 2026-01-02 — Elastic IP 적용 (고정 퍼블릭 IP 구성)
+
+기존 EC2 인스턴스는 퍼블릭 IPv4 주소가 **임시(Ephemeral) IP**로 할당되어 있어,  
+인스턴스를 중지(Stop) 후 다시 시작(Start)할 경우 퍼블릭 IP 주소가 변경되는 문제가 발생했다.
+
+이로 인해 다음과 같은 문제가 발생할 수 있다.
+- Jenkins 접속 주소 변경
+- GitHub Webhook 엔드포인트 불일치
+- Jenkins → Service EC2 SSH 배포 실패
+- CI/CD 파이프라인 재설정 필요
+
+이를 해결하기 위해 **Jenkins EC2와 Service EC2 모두에 Elastic IP를 적용**하여  
+인스턴스 재시작 여부와 관계없이 **고정된 퍼블릭 IP 주소를 유지**하도록 구성하였다.
+
+---
+
+#### Elastic IP 적용 대상
+
+- **Jenkins-EC2**
+  - Elastic IP 할당
+  - Jenkins Web UI 및 GitHub Webhook 엔드포인트 고정
+
+- **Service-EC2**
+  - Elastic IP 할당
+  - 외부 사용자 웹 서비스 접근 주소 고정
+  - Jenkins SSH 기반 자동 배포 안정성 확보
+
+---
+
+#### Elastic IP 적용 결과
+
+<img width="1231" height="232" alt="image" src="https://github.com/user-attachments/assets/e369302f-78dd-4ec9-b1b0-45689c3c5e18" />
+
+- 인스턴스 중지 및 재시작 이후에도 동일한 IP 주소 유지
+- GitHub Webhook 및 Jenkins Pipeline 정상 동작 유지
+- CI/CD 파이프라인의 안정성 및 운영 환경 유사성 향상
+
+---
+
+
