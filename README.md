@@ -147,5 +147,30 @@ Jenkins는 별도의 수동 조작 없이 Pipeline을 자동 실행합니다.
 - 서비스 포트를 80으로 통합하여 실서비스 형태로 구성
 - 실제 운영 환경과 유사한 CI/CD 파이프라인 실습 완료
 
-본 실습을 통해  
-Jenkins Pipeline, Docker 기반 배포, GitHub Webhook 트리거 흐름을 엔드 투 엔드로 경험
+---
+
+## Next Step: CI Quality Gate 적용 (Test Failure Stops Deployment)
+
+현재 CI/CD 파이프라인은 코드 변경 시 자동으로 배포가 수행되는 구조로 완성되었다.  
+다음 단계에서는 **테스트 결과를 기준으로 배포 여부를 판단하는 CI 품질 게이트(Quality Gate)**를 적용할 예정이다.
+
+### Planned Enhancement
+- Jenkins Pipeline에 Test Stage 추가
+- 테스트 실패 시 Docker Build 및 Deploy 단계 자동 중단
+- 검증되지 않은 코드의 운영 환경 배포 방지
+
+### Planned CI/CD Flow
+
+GitHub Push
+→ Jenkins Trigger
+→ Test Stage (FAIL 시 Pipeline 중단)
+→ Docker Build
+→ Docker Push
+→ Deploy
+
+이를 통해 단순 자동 배포를 넘어  
+**운영 안정성과 신뢰성을 고려한 CI/CD 파이프라인**으로 확장할 계획이다.
+
+---
+
+### 2026-01-02
