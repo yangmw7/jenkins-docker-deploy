@@ -39,3 +39,42 @@ CI/CD 파이프라인을 구성했습니다.
 
 향후 GitHub Webhook을 적용하여
 자동 배포 구조로 확장할 예정입니다.
+
+
+### 2026-01-01
+
+#### 🚀 CI/CD Architecture (GitHub Webhook – Auto Deploy)
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/274c555a-0592-48f8-b01f-a238db4ff3a0" />
+
+위 아키텍처는 GitHub Webhook을 활용하여  
+**코드 변경 시 자동으로 빌드 및 배포가 수행되는 CI/CD 파이프라인 구조**를 나타냅니다.
+
+개발자가 GitHub 저장소에 `git push`를 수행하면  
+GitHub Webhook 이벤트가 Jenkins 서버로 전달되고,  
+Jenkins는 별도의 수동 조작 없이 Pipeline을 자동 실행합니다.
+
+---
+
+### 🔹 GitHub Repository (Webhook Trigger)
+
+- 애플리케이션 소스 코드 관리
+- Jenkinsfile, Dockerfile, 정적 웹 리소스 포함
+- `main` 브랜치 기준 배포
+- GitHub Webhook 설정
+  - Jenkins Webhook Endpoint:
+    ```
+    http://<JENKINS_PUBLIC_IP>:8080/github-webhook/
+    ```
+- 코드 Push 시 Jenkins Pipeline 자동 트리거
+
+---
+
+### 🔹 Jenkins EC2 Instance (CI Server)
+
+- GitHub Webhook 이벤트 수신
+- Pipeline Script from SCM 방식 사용
+- 주요 자동 처리 단계:
+  1. GitHub 저장소 코드 Checkout
+  2. Docker 이미지 Build
+  3. Docker Hub에 이미지 Push (`latest`)험
