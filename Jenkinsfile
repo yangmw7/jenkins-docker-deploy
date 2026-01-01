@@ -10,6 +10,20 @@ pipeline {
 
     stages {
 
+        stage('Test (Quality Gate)') {
+            steps {
+                sh '''
+                echo "Running CI Test..."
+                
+                # 최소 품질 게이트 예시
+                # index.html 파일이 존재하지 않으면 실패
+                test -f index.html
+
+                echo "Test Passed"
+                '''
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 sh '''
