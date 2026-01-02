@@ -244,7 +244,10 @@ index.html -> index_fail.html
 
 ---
 
-Jenkins Pipeline 실행 결과
+**Jenkins Pipeline 실행 결과**
+
+<img width="543" height="289" alt="image" src="https://github.com/user-attachments/assets/425b5dbc-5121-4a55-8243-bda075c7339f" />
+<img width="627" height="696" alt="image" src="https://github.com/user-attachments/assets/a8ebb548-721b-455b-b06b-61778ded1e61" />
 
 - CI(Test – Quality Gate) 단계에서 exit code 1 반환
 - Jenkins Pipeline 상태: FAILURE
