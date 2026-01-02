@@ -212,4 +212,47 @@ GitHub Push
 
 ---
 
+### 2026-01-02 — CI Quality Gate 실패 시나리오 검증 (의도적 FAIL)
 
+Jenkinsfile의 CI(Test – Quality Gate) 단계에는 다음과 같은 테스트 로직이 정의되어 있다.
+
+```bash
+stage('Test (Quality Gate)') {
+    steps {
+        sh '''
+        echo "Running CI Test..."
+        
+        # 최소 품질 게이트 예시
+        # index.html 파일이 존재하지 않으면 실패
+        test -f index.html
+
+        echo "Test Passed"
+        '''
+    }
+}
+```
+해당 테스트는 Jenkins 워크스페이스 내에 index.html 파일이 존재하는지를 검사하는
+CI 품질 게이트(Quality Gate) 역할의 테스트 로직이다.
+
+본 실습에서는 CI 실패 상황을 의도적으로 발생시키기 위해
+기존 ``index.html`` 파일의 이름을 다음과 같이 변경하였다.
+
+```
+index.html -> index_fail.html
+```
+이로 인해 ``test -f index.html`` 조건이 충족되지 않도록 구성하였다.
+
+---
+
+Jenkins Pipeline 실행 결과
+
+- CI(Test – Quality Gate) 단계에서 exit code 1 반환
+- Jenkins Pipeline 상태: FAILURE
+- 이후 단계 자동 중단
+  - Docker Build: skipped
+  - Docker Push: skipped
+  - Deploy to Service EC2: skipped
+
+이는 Jenkins Declarative Pipeline의 기본 동작 방식으로,
+앞선 Stage에서 실패가 발생할 경우 이후 Stage를 실행하지 않아
+잘못된 빌드 및 배포를 방지하는 정상적인 파이프라인 보호 메커니즘이다.
